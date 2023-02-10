@@ -1,0 +1,1322 @@
+
+
+
+PATH: ../v3-core/audits/tob/contracts/crytic/echidna/E2E_mint_burn.sol
+
+  function _getRandomPositionIdx(uint128 _seed, uint256 _positionsCount) internal view returns (uint128 positionIdx) ;
+  function _getRandomBurnAmount(uint128 _seed, uint128 _positionAmount) internal view returns (uint128 burnAmount) ;
+  function _getRandomPositionIdxAndBurnAmount(uint128 _seed)
+        internal
+        view
+        returns (uint128 positionIdx, uint128 burnAmount)
+    ;
+  function storeUsedTicks(int24 _tL, int24 _tU) internal ;
+  function removePosition(uint256 _posIdx) internal ;
+  function forgePosition(
+        uint128 _seed,
+        int24 _poolTickSpacing,
+        uint24 _poolTickCount,
+        int24 _poolMaxTick
+    ) internal view returns (int24 tickLower, int24 tickUpper) ;
+  function check_liquidityNet_invariant() internal ;
+  function check_liquidity_invariant() internal ;
+  function check_tick_feegrowth_invariant() internal ;
+  function check_mint_invariants(
+        int24 _tickLower,
+        int24 _tickUpper,
+        UniswapMinter.MinterStats memory bfre,
+        UniswapMinter.MinterStats memory aftr
+    ) internal ;
+  function check_burn_invariants(
+        uint128 _burnAmount,
+        int24 _tickLower,
+        int24 _tickUpper,
+        uint128 _newPosAmount,
+        UniswapMinter.MinterStats memory bfre,
+        UniswapMinter.MinterStats memory aftr
+    ) internal ;
+  function viewInitRandomPoolParams(uint128 _seed) public view returns (PoolParams memory _poolParams) ;
+  function viewMintRandomNewPosition(
+        uint128 _seed,
+        int24 _poolTickSpacing,
+        uint24 _poolTickCount,
+        int24 _poolMaxTick
+    )
+        public
+        view
+        returns (
+            int24 tickLower,
+            int24 tickUpper,
+            uint128 amount
+        )
+    ;
+  function viewBurnRandomPositionIdx(uint128 _seed, uint128 _positionsCount)
+        public
+        view
+        returns (uint128 positionIdx)
+    ;
+  function viewBurnRandomPositionBurnAmount(uint128 _seed, uint128 _positionAmount)
+        public
+        view
+        returns (uint128 burnAmount)
+    ;
+  function forgePoolParams(uint128 _seed) internal view returns (PoolParams memory _poolParams) ;
+  function _init(uint128 _seed) internal ;
+  function test_mint(uint128 _amount) public ;
+  function test_burn_partial(uint128 _amount) public ;
+  function test_burn_full(uint128 _amount) public ;
+  function test_burn_zero(uint128 _amount) public ;
+
+
+PATH: ../v3-core/audits/tob/contracts/crytic/echidna/E2E_swap.sol
+
+  function get_random_zeroForOne_priceLimit(int256 _amountSpecified)
+        internal
+        view
+        returns (uint160 sqrtPriceLimitX96)
+    ;
+  function get_random_oneForZero_priceLimit(int256 _amountSpecified)
+        internal
+        view
+        returns (uint160 sqrtPriceLimitX96)
+    ;
+  function check_liquidityNet_invariant() internal ;
+  function check_liquidity_invariant() internal ;
+  function check_tick_feegrowth_invariant() internal ;
+  function check_swap_invariants(
+        int24 tick_bfre,
+        int24 tick_aftr,
+        uint128 liq_bfre,
+        uint128 liq_aftr,
+        uint256 bal_sell_bfre,
+        uint256 bal_sell_aftr,
+        uint256 bal_buy_bfre,
+        uint256 bal_buy_aftr,
+        uint256 feegrowth_sell_bfre,
+        uint256 feegrowth_sell_aftr,
+        uint256 feegrowth_buy_bfre,
+        uint256 feegrowth_buy_aftr
+    ) internal ;
+  function viewRandomInit(uint128 _seed)
+        public
+        view
+        returns (PoolParams memory poolParams, PoolPositions memory poolPositions)
+    ;
+  function forgePoolParams(uint128 _seed) internal view returns (PoolParams memory poolParams) ;
+  function forgePoolPositions(
+        uint128 _seed,
+        int24 _poolTickSpacing,
+        uint24 _poolTickCount,
+        int24 _poolMaxTick
+    ) internal view returns (PoolPositions memory poolPositions_) ;
+  function _init(uint128 _seed) internal ;
+  function test_swap_exactIn_zeroForOne(uint128 _amount) public ;
+  function test_swap_exactIn_oneForZero(uint128 _amount) public ;
+  function test_swap_exactOut_zeroForOne(uint128 _amount) public ;
+  function test_swap_exactOut_oneForZero(uint128 _amount) public ;
+
+
+PATH: ../v3-core/audits/tob/contracts/crytic/echidna/Other.sol
+
+  function test_getNextSqrtPriceFromInAndOutput(
+        uint160 sqrtPX96,
+        uint128 liquidity,
+        uint256 amount,
+        bool add
+    ) public ;
+
+
+PATH: ../v3-core/audits/tob/contracts/crytic/echidna/Setup.sol
+
+  function mintTo(address _recipient, uint256 _amount) public ;
+  function mintTo(
+        uint256 _tokenIdx,
+        address _recipient,
+        uint256 _amount
+    ) public ;
+  function createPool(uint24 _fee, uint160 _startPrice) public ;
+  function setPool(UniswapV3Pool _pool) public ;
+  function uniswapV3MintCallback(
+        uint256 amount0Owed,
+        uint256 amount1Owed,
+        bytes calldata data
+    ) external ;
+  function getTickLiquidityVars(int24 _tickLower, int24 _tickUpper)
+        internal
+        view
+        returns (
+            uint128,
+            int128,
+            uint128,
+            int128
+        )
+    ;
+  function getStats(int24 _tickLower, int24 _tickUpper) internal view returns (MinterStats memory stats) ;
+  function doMint(
+        int24 _tickLower,
+        int24 _tickUpper,
+        uint128 _amount
+    ) public returns (MinterStats memory bfre, MinterStats memory aftr) ;
+  function doBurn(
+        int24 _tickLower,
+        int24 _tickUpper,
+        uint128 _amount
+    ) public returns (MinterStats memory bfre, MinterStats memory aftr) ;
+  function setPool(UniswapV3Pool _pool) public ;
+  function uniswapV3SwapCallback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes calldata data
+    ) external ;
+  function getStats() internal view returns (SwapperStats memory stats) ;
+  function doSwap(
+        bool _zeroForOne,
+        int256 _amountSpecified,
+        uint160 _sqrtPriceLimitX96
+    ) public returns (SwapperStats memory bfre, SwapperStats memory aftr) ;
+
+
+PATH: ../v3-core/audits/tob/contracts/crytic/manticore/001.sol
+
+  function verify(uint256 x) external ;
+
+
+PATH: ../v3-core/audits/tob/contracts/crytic/manticore/002.sol
+
+  function verify(uint256 x) external ;
+
+
+PATH: ../v3-core/audits/tob/contracts/crytic/manticore/003.sol
+
+  function verify(uint128 x, int128 y) external ;
+
+
+PATH: ../v3-core/contracts/NoDelegateCall.sol
+
+  function checkNotDelegateCall() private view ;
+
+
+PATH: ../v3-core/contracts/UniswapV3Factory.sol
+
+  function createPool(
+        address tokenA,
+        address tokenB,
+        uint24 fee
+    ) external override noDelegateCall returns (address pool) ;
+  function setOwner(address _owner) external override ;
+  function enableFeeAmount(uint24 fee, int24 tickSpacing) public override ;
+
+
+PATH: ../v3-core/contracts/UniswapV3Pool.sol
+
+  function checkTicks(int24 tickLower, int24 tickUpper) private pure ;
+  function _blockTimestamp() internal view virtual returns (uint32) ;
+  function balance0() private view returns (uint256) ;
+  function balance1() private view returns (uint256) ;
+  function snapshotCumulativesInside(int24 tickLower, int24 tickUpper)
+        external
+        view
+        override
+        noDelegateCall
+        returns (
+            int56 tickCumulativeInside,
+            uint160 secondsPerLiquidityInsideX128,
+            uint32 secondsInside
+        )
+    ;
+  function observe(uint32[] calldata secondsAgos)
+        external
+        view
+        override
+        noDelegateCall
+        returns (int56[] memory tickCumulatives, uint160[] memory secondsPerLiquidityCumulativeX128s)
+    ;
+  function increaseObservationCardinalityNext(uint16 observationCardinalityNext)
+        external
+        override
+        lock
+        noDelegateCall
+    ;
+  function initialize(uint160 sqrtPriceX96) external override ;
+  function _modifyPosition(ModifyPositionParams memory params)
+        private
+        noDelegateCall
+        returns (
+            Position.Info storage position,
+            int256 amount0,
+            int256 amount1
+        )
+    ;
+  function _updatePosition(
+        address owner,
+        int24 tickLower,
+        int24 tickUpper,
+        int128 liquidityDelta,
+        int24 tick
+    ) private returns (Position.Info storage position) ;
+  function mint(
+        address recipient,
+        int24 tickLower,
+        int24 tickUpper,
+        uint128 amount,
+        bytes calldata data
+    ) external override lock returns (uint256 amount0, uint256 amount1) ;
+  function collect(
+        address recipient,
+        int24 tickLower,
+        int24 tickUpper,
+        uint128 amount0Requested,
+        uint128 amount1Requested
+    ) external override lock returns (uint128 amount0, uint128 amount1) ;
+  function burn(
+        int24 tickLower,
+        int24 tickUpper,
+        uint128 amount
+    ) external override lock returns (uint256 amount0, uint256 amount1) ;
+  function swap(
+        address recipient,
+        bool zeroForOne,
+        int256 amountSpecified,
+        uint160 sqrtPriceLimitX96,
+        bytes calldata data
+    ) external override noDelegateCall returns (int256 amount0, int256 amount1) ;
+  function flash(
+        address recipient,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external override lock noDelegateCall ;
+  function setFeeProtocol(uint8 feeProtocol0, uint8 feeProtocol1) external override lock onlyFactoryOwner ;
+  function collectProtocol(
+        address recipient,
+        uint128 amount0Requested,
+        uint128 amount1Requested
+    ) external override lock onlyFactoryOwner returns (uint128 amount0, uint128 amount1) ;
+
+
+PATH: ../v3-core/contracts/UniswapV3PoolDeployer.sol
+
+  function deploy(
+        address factory,
+        address token0,
+        address token1,
+        uint24 fee,
+        int24 tickSpacing
+    ) internal returns (address pool) ;
+
+
+PATH: ../v3-core/contracts/libraries/BitMath.sol
+
+  function mostSignificantBit(uint256 x) internal pure returns (uint8 r) ;
+  function leastSignificantBit(uint256 x) internal pure returns (uint8 r) ;
+
+
+PATH: ../v3-core/contracts/libraries/FixedPoint128.sol
+
+
+
+PATH: ../v3-core/contracts/libraries/FixedPoint96.sol
+
+
+
+PATH: ../v3-core/contracts/libraries/FullMath.sol
+
+  function mulDiv(
+        uint256 a,
+        uint256 b,
+        uint256 denominator
+    ) internal pure returns (uint256 result) ;
+  function mulDivRoundingUp(
+        uint256 a,
+        uint256 b,
+        uint256 denominator
+    ) internal pure returns (uint256 result) ;
+
+
+PATH: ../v3-core/contracts/libraries/LiquidityMath.sol
+
+  function addDelta(uint128 x, int128 y) internal pure returns (uint128 z) ;
+
+
+PATH: ../v3-core/contracts/libraries/LowGasSafeMath.sol
+
+  function add(uint256 x, uint256 y) internal pure returns (uint256 z) ;
+  function sub(uint256 x, uint256 y) internal pure returns (uint256 z) ;
+  function mul(uint256 x, uint256 y) internal pure returns (uint256 z) ;
+  function add(int256 x, int256 y) internal pure returns (int256 z) ;
+  function sub(int256 x, int256 y) internal pure returns (int256 z) ;
+
+
+PATH: ../v3-core/contracts/libraries/Oracle.sol
+
+  function transform(
+        Observation memory last,
+        uint32 blockTimestamp,
+        int24 tick,
+        uint128 liquidity
+    ) private pure returns (Observation memory) ;
+  function initialize(Observation[65535] storage self, uint32 time)
+        internal
+        returns (uint16 cardinality, uint16 cardinalityNext)
+    ;
+  function write(
+        Observation[65535] storage self,
+        uint16 index,
+        uint32 blockTimestamp,
+        int24 tick,
+        uint128 liquidity,
+        uint16 cardinality,
+        uint16 cardinalityNext
+    ) internal returns (uint16 indexUpdated, uint16 cardinalityUpdated) ;
+  function grow(
+        Observation[65535] storage self,
+        uint16 current,
+        uint16 next
+    ) internal returns (uint16) ;
+  function lte(
+        uint32 time,
+        uint32 a,
+        uint32 b
+    ) private pure returns (bool) ;
+  function binarySearch(
+        Observation[65535] storage self,
+        uint32 time,
+        uint32 target,
+        uint16 index,
+        uint16 cardinality
+    ) private view returns (Observation memory beforeOrAt, Observation memory atOrAfter) ;
+  function getSurroundingObservations(
+        Observation[65535] storage self,
+        uint32 time,
+        uint32 target,
+        int24 tick,
+        uint16 index,
+        uint128 liquidity,
+        uint16 cardinality
+    ) private view returns (Observation memory beforeOrAt, Observation memory atOrAfter) ;
+  function observeSingle(
+        Observation[65535] storage self,
+        uint32 time,
+        uint32 secondsAgo,
+        int24 tick,
+        uint16 index,
+        uint128 liquidity,
+        uint16 cardinality
+    ) internal view returns (int56 tickCumulative, uint160 secondsPerLiquidityCumulativeX128) ;
+  function observe(
+        Observation[65535] storage self,
+        uint32 time,
+        uint32[] memory secondsAgos,
+        int24 tick,
+        uint16 index,
+        uint128 liquidity,
+        uint16 cardinality
+    ) internal view returns (int56[] memory tickCumulatives, uint160[] memory secondsPerLiquidityCumulativeX128s) ;
+
+
+PATH: ../v3-core/contracts/libraries/Position.sol
+
+  function get(
+        mapping(bytes32 => Info) storage self,
+        address owner,
+        int24 tickLower,
+        int24 tickUpper
+    ) internal view returns (Position.Info storage position) ;
+  function update(
+        Info storage self,
+        int128 liquidityDelta,
+        uint256 feeGrowthInside0X128,
+        uint256 feeGrowthInside1X128
+    ) internal ;
+
+
+PATH: ../v3-core/contracts/libraries/SafeCast.sol
+
+  function toUint160(uint256 y) internal pure returns (uint160 z) ;
+  function toInt128(int256 y) internal pure returns (int128 z) ;
+  function toInt256(uint256 y) internal pure returns (int256 z) ;
+
+
+PATH: ../v3-core/contracts/libraries/SqrtPriceMath.sol
+
+  function getNextSqrtPriceFromAmount0RoundingUp(
+        uint160 sqrtPX96,
+        uint128 liquidity,
+        uint256 amount,
+        bool add
+    ) internal pure returns (uint160) ;
+  function getNextSqrtPriceFromAmount1RoundingDown(
+        uint160 sqrtPX96,
+        uint128 liquidity,
+        uint256 amount,
+        bool add
+    ) internal pure returns (uint160) ;
+  function getNextSqrtPriceFromInput(
+        uint160 sqrtPX96,
+        uint128 liquidity,
+        uint256 amountIn,
+        bool zeroForOne
+    ) internal pure returns (uint160 sqrtQX96) ;
+  function getNextSqrtPriceFromOutput(
+        uint160 sqrtPX96,
+        uint128 liquidity,
+        uint256 amountOut,
+        bool zeroForOne
+    ) internal pure returns (uint160 sqrtQX96) ;
+  function getAmount0Delta(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint128 liquidity,
+        bool roundUp
+    ) internal pure returns (uint256 amount0) ;
+  function getAmount1Delta(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint128 liquidity,
+        bool roundUp
+    ) internal pure returns (uint256 amount1) ;
+  function getAmount0Delta(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        int128 liquidity
+    ) internal pure returns (int256 amount0) ;
+  function getAmount1Delta(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        int128 liquidity
+    ) internal pure returns (int256 amount1) ;
+
+
+PATH: ../v3-core/contracts/libraries/SwapMath.sol
+
+  function computeSwapStep(
+        uint160 sqrtRatioCurrentX96,
+        uint160 sqrtRatioTargetX96,
+        uint128 liquidity,
+        int256 amountRemaining,
+        uint24 feePips
+    )
+        internal
+        pure
+        returns (
+            uint160 sqrtRatioNextX96,
+            uint256 amountIn,
+            uint256 amountOut,
+            uint256 feeAmount
+        )
+    ;
+
+
+PATH: ../v3-core/contracts/libraries/Tick.sol
+
+  function tickSpacingToMaxLiquidityPerTick(int24 tickSpacing) internal pure returns (uint128) ;
+  function getFeeGrowthInside(
+        mapping(int24 => Tick.Info) storage self,
+        int24 tickLower,
+        int24 tickUpper,
+        int24 tickCurrent,
+        uint256 feeGrowthGlobal0X128,
+        uint256 feeGrowthGlobal1X128
+    ) internal view returns (uint256 feeGrowthInside0X128, uint256 feeGrowthInside1X128) ;
+  function update(
+        mapping(int24 => Tick.Info) storage self,
+        int24 tick,
+        int24 tickCurrent,
+        int128 liquidityDelta,
+        uint256 feeGrowthGlobal0X128,
+        uint256 feeGrowthGlobal1X128,
+        uint160 secondsPerLiquidityCumulativeX128,
+        int56 tickCumulative,
+        uint32 time,
+        bool upper,
+        uint128 maxLiquidity
+    ) internal returns (bool flipped) ;
+  function clear(mapping(int24 => Tick.Info) storage self, int24 tick) internal ;
+  function cross(
+        mapping(int24 => Tick.Info) storage self,
+        int24 tick,
+        uint256 feeGrowthGlobal0X128,
+        uint256 feeGrowthGlobal1X128,
+        uint160 secondsPerLiquidityCumulativeX128,
+        int56 tickCumulative,
+        uint32 time
+    ) internal returns (int128 liquidityNet) ;
+
+
+PATH: ../v3-core/contracts/libraries/TickBitmap.sol
+
+  function position(int24 tick) private pure returns (int16 wordPos, uint8 bitPos) ;
+  function flipTick(
+        mapping(int16 => uint256) storage self,
+        int24 tick,
+        int24 tickSpacing
+    ) internal ;
+  function nextInitializedTickWithinOneWord(
+        mapping(int16 => uint256) storage self,
+        int24 tick,
+        int24 tickSpacing,
+        bool lte
+    ) internal view returns (int24 next, bool initialized) ;
+
+
+PATH: ../v3-core/contracts/libraries/TickMath.sol
+
+  function getSqrtRatioAtTick(int24 tick) internal pure returns (uint160 sqrtPriceX96) ;
+  function getTickAtSqrtRatio(uint160 sqrtPriceX96) internal pure returns (int24 tick) ;
+
+
+PATH: ../v3-core/contracts/libraries/TransferHelper.sol
+
+  function safeTransfer(
+        address token,
+        address to,
+        uint256 value
+    ) internal ;
+
+
+PATH: ../v3-core/contracts/libraries/UnsafeMath.sol
+
+  function divRoundingUp(uint256 x, uint256 y) internal pure returns (uint256 z) ;
+
+
+PATH: ../v3-periphery/contracts/NonfungiblePositionManager.sol
+
+  function positions(uint256 tokenId)
+        external
+        view
+        override
+        returns (
+            uint96 nonce,
+            address operator,
+            address token0,
+            address token1,
+            uint24 fee,
+            int24 tickLower,
+            int24 tickUpper,
+            uint128 liquidity,
+            uint256 feeGrowthInside0LastX128,
+            uint256 feeGrowthInside1LastX128,
+            uint128 tokensOwed0,
+            uint128 tokensOwed1
+        )
+    ;
+  function cachePoolKey(address pool, PoolAddress.PoolKey memory poolKey) private returns (uint80 poolId) ;
+  function mint(MintParams calldata params)
+        external
+        payable
+        override
+        checkDeadline(params.deadline)
+        returns (
+            uint256 tokenId,
+            uint128 liquidity,
+            uint256 amount0,
+            uint256 amount1
+        )
+    ;
+  function tokenURI(uint256 tokenId) public view override(ERC721, IERC721Metadata) returns (string memory) ;
+  function baseURI() public pure override returns (string memory) ;
+  function increaseLiquidity(IncreaseLiquidityParams calldata params)
+        external
+        payable
+        override
+        checkDeadline(params.deadline)
+        returns (
+            uint128 liquidity,
+            uint256 amount0,
+            uint256 amount1
+        )
+    ;
+  function decreaseLiquidity(DecreaseLiquidityParams calldata params)
+        external
+        payable
+        override
+        isAuthorizedForToken(params.tokenId)
+        checkDeadline(params.deadline)
+        returns (uint256 amount0, uint256 amount1)
+    ;
+  function collect(CollectParams calldata params)
+        external
+        payable
+        override
+        isAuthorizedForToken(params.tokenId)
+        returns (uint256 amount0, uint256 amount1)
+    ;
+  function burn(uint256 tokenId) external payable override isAuthorizedForToken(tokenId) ;
+  function _getAndIncrementNonce(uint256 tokenId) internal override returns (uint256) ;
+  function getApproved(uint256 tokenId) public view override(ERC721, IERC721) returns (address) ;
+  function _approve(address to, uint256 tokenId) internal override(ERC721) ;
+
+
+PATH: ../v3-periphery/contracts/NonfungibleTokenPositionDescriptor.sol
+
+  function nativeCurrencyLabel() public view returns (string memory) ;
+  function tokenURI(INonfungiblePositionManager positionManager, uint256 tokenId)
+        external
+        view
+        override
+        returns (string memory)
+    ;
+  function flipRatio(
+        address token0,
+        address token1,
+        uint256 chainId
+    ) public view returns (bool) ;
+  function tokenRatioPriority(address token, uint256 chainId) public view returns (int256) ;
+
+
+PATH: ../v3-periphery/contracts/SwapRouter.sol
+
+  function getPool(
+        address tokenA,
+        address tokenB,
+        uint24 fee
+    ) private view returns (IUniswapV3Pool) ;
+  function uniswapV3SwapCallback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes calldata _data
+    ) external override ;
+  function exactInputInternal(
+        uint256 amountIn,
+        address recipient,
+        uint160 sqrtPriceLimitX96,
+        SwapCallbackData memory data
+    ) private returns (uint256 amountOut) ;
+  function exactInputSingle(ExactInputSingleParams calldata params)
+        external
+        payable
+        override
+        checkDeadline(params.deadline)
+        returns (uint256 amountOut)
+    ;
+  function exactInput(ExactInputParams memory params)
+        external
+        payable
+        override
+        checkDeadline(params.deadline)
+        returns (uint256 amountOut)
+    ;
+  function exactOutputInternal(
+        uint256 amountOut,
+        address recipient,
+        uint160 sqrtPriceLimitX96,
+        SwapCallbackData memory data
+    ) private returns (uint256 amountIn) ;
+  function exactOutputSingle(ExactOutputSingleParams calldata params)
+        external
+        payable
+        override
+        checkDeadline(params.deadline)
+        returns (uint256 amountIn)
+    ;
+  function exactOutput(ExactOutputParams calldata params)
+        external
+        payable
+        override
+        checkDeadline(params.deadline)
+        returns (uint256 amountIn)
+    ;
+
+
+PATH: ../v3-periphery/contracts/V3Migrator.sol
+
+  function migrate(MigrateParams calldata params) external override ;
+
+
+PATH: ../v3-periphery/contracts/base/BlockTimestamp.sol
+
+  function _blockTimestamp() internal view virtual returns (uint256) ;
+
+
+PATH: ../v3-periphery/contracts/base/ERC721Permit.sol
+
+  function _getAndIncrementNonce(uint256 tokenId) internal virtual returns (uint256);
+
+    /// @dev The hash of the name used in the permit signature verification
+    bytes32 private immutable nameHash;
+
+    /// @dev The hash of the version string used in the permit signature verification
+    bytes32 private immutable versionHash;
+
+    /// @notice Computes the nameHash and versionHash
+    constructor(
+        string memory name_,
+        string memory symbol_,
+        string memory version_
+    ) ERC721(name_, symbol_) ;
+  function DOMAIN_SEPARATOR() public view override returns (bytes32) ;
+  function permit(
+        address spender,
+        uint256 tokenId,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external payable override ;
+
+
+PATH: ../v3-periphery/contracts/base/LiquidityManagement.sol
+
+  function uniswapV3MintCallback(
+        uint256 amount0Owed,
+        uint256 amount1Owed,
+        bytes calldata data
+    ) external override ;
+  function addLiquidity(AddLiquidityParams memory params)
+        internal
+        returns (
+            uint128 liquidity,
+            uint256 amount0,
+            uint256 amount1,
+            IUniswapV3Pool pool
+        )
+    ;
+
+
+PATH: ../v3-periphery/contracts/base/Multicall.sol
+
+  function multicall(bytes[] calldata data) public payable override returns (bytes[] memory results) ;
+
+
+PATH: ../v3-periphery/contracts/base/PeripheryImmutableState.sol
+
+
+
+PATH: ../v3-periphery/contracts/base/PeripheryPayments.sol
+
+  function unwrapWETH9(uint256 amountMinimum, address recipient) public payable override ;
+  function sweepToken(
+        address token,
+        uint256 amountMinimum,
+        address recipient
+    ) public payable override ;
+  function refundETH() external payable override ;
+  function pay(
+        address token,
+        address payer,
+        address recipient,
+        uint256 value
+    ) internal ;
+
+
+PATH: ../v3-periphery/contracts/base/PeripheryPaymentsWithFee.sol
+
+  function unwrapWETH9WithFee(
+        uint256 amountMinimum,
+        address recipient,
+        uint256 feeBips,
+        address feeRecipient
+    ) public payable override ;
+  function sweepTokenWithFee(
+        address token,
+        uint256 amountMinimum,
+        address recipient,
+        uint256 feeBips,
+        address feeRecipient
+    ) public payable override ;
+
+
+PATH: ../v3-periphery/contracts/base/PeripheryValidation.sol
+
+
+
+PATH: ../v3-periphery/contracts/base/PoolInitializer.sol
+
+  function createAndInitializePoolIfNecessary(
+        address token0,
+        address token1,
+        uint24 fee,
+        uint160 sqrtPriceX96
+    ) external payable override returns (address pool) ;
+
+
+PATH: ../v3-periphery/contracts/base/SelfPermit.sol
+
+  function selfPermit(
+        address token,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public payable override ;
+  function selfPermitIfNecessary(
+        address token,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external payable override ;
+  function selfPermitAllowed(
+        address token,
+        uint256 nonce,
+        uint256 expiry,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public payable override ;
+  function selfPermitAllowedIfNecessary(
+        address token,
+        uint256 nonce,
+        uint256 expiry,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external payable override ;
+
+
+PATH: ../v3-periphery/contracts/examples/PairFlash.sol
+
+  function uniswapV3FlashCallback(
+        uint256 fee0,
+        uint256 fee1,
+        bytes calldata data
+    ) external override ;
+  function initFlash(FlashParams memory params) external ;
+
+
+PATH: ../v3-periphery/contracts/lens/Quoter.sol
+
+  function getPool(
+        address tokenA,
+        address tokenB,
+        uint24 fee
+    ) private view returns (IUniswapV3Pool) ;
+  function uniswapV3SwapCallback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes memory path
+    ) external view override ;
+  function parseRevertReason(bytes memory reason) private pure returns (uint256) ;
+  function quoteExactInputSingle(
+        address tokenIn,
+        address tokenOut,
+        uint24 fee,
+        uint256 amountIn,
+        uint160 sqrtPriceLimitX96
+    ) public override returns (uint256 amountOut) ;
+  function quoteExactInput(bytes memory path, uint256 amountIn) external override returns (uint256 amountOut) ;
+  function quoteExactOutputSingle(
+        address tokenIn,
+        address tokenOut,
+        uint24 fee,
+        uint256 amountOut,
+        uint160 sqrtPriceLimitX96
+    ) public override returns (uint256 amountIn) ;
+  function quoteExactOutput(bytes memory path, uint256 amountOut) external override returns (uint256 amountIn) ;
+
+
+PATH: ../v3-periphery/contracts/lens/QuoterV2.sol
+
+  function getPool(
+        address tokenA,
+        address tokenB,
+        uint24 fee
+    ) private view returns (IUniswapV3Pool) ;
+  function uniswapV3SwapCallback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes memory path
+    ) external view override ;
+  function parseRevertReason(bytes memory reason)
+        private
+        pure
+        returns (
+            uint256 amount,
+            uint160 sqrtPriceX96After,
+            int24 tickAfter
+        )
+    ;
+  function handleRevert(
+        bytes memory reason,
+        IUniswapV3Pool pool,
+        uint256 gasEstimate
+    )
+        private
+        view
+        returns (
+            uint256 amount,
+            uint160 sqrtPriceX96After,
+            uint32 initializedTicksCrossed,
+            uint256
+        )
+    ;
+  function quoteExactInputSingle(QuoteExactInputSingleParams memory params)
+        public
+        override
+        returns (
+            uint256 amountOut,
+            uint160 sqrtPriceX96After,
+            uint32 initializedTicksCrossed,
+            uint256 gasEstimate
+        )
+    ;
+  function quoteExactInput(bytes memory path, uint256 amountIn)
+        public
+        override
+        returns (
+            uint256 amountOut,
+            uint160[] memory sqrtPriceX96AfterList,
+            uint32[] memory initializedTicksCrossedList,
+            uint256 gasEstimate
+        )
+    ;
+  function quoteExactOutputSingle(QuoteExactOutputSingleParams memory params)
+        public
+        override
+        returns (
+            uint256 amountIn,
+            uint160 sqrtPriceX96After,
+            uint32 initializedTicksCrossed,
+            uint256 gasEstimate
+        )
+    ;
+  function quoteExactOutput(bytes memory path, uint256 amountOut)
+        public
+        override
+        returns (
+            uint256 amountIn,
+            uint160[] memory sqrtPriceX96AfterList,
+            uint32[] memory initializedTicksCrossedList,
+            uint256 gasEstimate
+        )
+    ;
+
+
+PATH: ../v3-periphery/contracts/lens/TickLens.sol
+
+  function getPopulatedTicksInWord(address pool, int16 tickBitmapIndex)
+        public
+        view
+        override
+        returns (PopulatedTick[] memory populatedTicks)
+    ;
+
+
+PATH: ../v3-periphery/contracts/lens/UniswapInterfaceMulticall.sol
+
+  function getCurrentBlockTimestamp() public view returns (uint256 timestamp) ;
+  function getEthBalance(address addr) public view returns (uint256 balance) ;
+  function multicall(Call[] memory calls) public returns (uint256 blockNumber, Result[] memory returnData) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/BytesLib.sol
+
+  function slice(
+        bytes memory _bytes,
+        uint256 _start,
+        uint256 _length
+    ) internal pure returns (bytes memory) ;
+  function toAddress(bytes memory _bytes, uint256 _start) internal pure returns (address) ;
+  function toUint24(bytes memory _bytes, uint256 _start) internal pure returns (uint24) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/CallbackValidation.sol
+
+  function verifyCallback(
+        address factory,
+        address tokenA,
+        address tokenB,
+        uint24 fee
+    ) internal view returns (IUniswapV3Pool pool) ;
+  function verifyCallback(address factory, PoolAddress.PoolKey memory poolKey)
+        internal
+        view
+        returns (IUniswapV3Pool pool)
+    ;
+
+
+PATH: ../v3-periphery/contracts/libraries/ChainId.sol
+
+  function get() internal pure returns (uint256 chainId) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/HexStrings.sol
+
+  function toHexString(uint256 value, uint256 length) internal pure returns (string memory) ;
+  function toHexStringNoPrefix(uint256 value, uint256 length) internal pure returns (string memory) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/LiquidityAmounts.sol
+
+  function toUint128(uint256 x) private pure returns (uint128 y) ;
+  function getLiquidityForAmount0(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint256 amount0
+    ) internal pure returns (uint128 liquidity) ;
+  function getLiquidityForAmount1(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint256 amount1
+    ) internal pure returns (uint128 liquidity) ;
+  function getLiquidityForAmounts(
+        uint160 sqrtRatioX96,
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint256 amount0,
+        uint256 amount1
+    ) internal pure returns (uint128 liquidity) ;
+  function getAmount0ForLiquidity(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint128 liquidity
+    ) internal pure returns (uint256 amount0) ;
+  function getAmount1ForLiquidity(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint128 liquidity
+    ) internal pure returns (uint256 amount1) ;
+  function getAmountsForLiquidity(
+        uint160 sqrtRatioX96,
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint128 liquidity
+    ) internal pure returns (uint256 amount0, uint256 amount1) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/NFTDescriptor.sol
+
+  function constructTokenURI(ConstructTokenURIParams memory params) public pure returns (string memory) ;
+  function escapeQuotes(string memory symbol) internal pure returns (string memory) ;
+  function generateDescriptionPartOne(
+        string memory quoteTokenSymbol,
+        string memory baseTokenSymbol,
+        string memory poolAddress
+    ) private pure returns (string memory) ;
+  function generateDescriptionPartTwo(
+        string memory tokenId,
+        string memory baseTokenSymbol,
+        string memory quoteTokenAddress,
+        string memory baseTokenAddress,
+        string memory feeTier
+    ) private pure returns (string memory) ;
+  function generateName(ConstructTokenURIParams memory params, string memory feeTier)
+        private
+        pure
+        returns (string memory)
+    ;
+  function generateDecimalString(DecimalStringParams memory params) private pure returns (string memory) ;
+  function tickToDecimalString(
+        int24 tick,
+        int24 tickSpacing,
+        uint8 baseTokenDecimals,
+        uint8 quoteTokenDecimals,
+        bool flipRatio
+    ) internal pure returns (string memory) ;
+  function sigfigsRounded(uint256 value, uint8 digits) private pure returns (uint256, bool) ;
+  function adjustForDecimalPrecision(
+        uint160 sqrtRatioX96,
+        uint8 baseTokenDecimals,
+        uint8 quoteTokenDecimals
+    ) private pure returns (uint256 adjustedSqrtRatioX96) ;
+  function abs(int256 x) private pure returns (uint256) ;
+  function fixedPointToDecimalString(
+        uint160 sqrtRatioX96,
+        uint8 baseTokenDecimals,
+        uint8 quoteTokenDecimals
+    ) internal pure returns (string memory) ;
+  function feeToPercentString(uint24 fee) internal pure returns (string memory) ;
+  function addressToString(address addr) internal pure returns (string memory) ;
+  function generateSVGImage(ConstructTokenURIParams memory params) internal pure returns (string memory svg) ;
+  function overRange(
+        int24 tickLower,
+        int24 tickUpper,
+        int24 tickCurrent
+    ) private pure returns (int8) ;
+  function scale(
+        uint256 n,
+        uint256 inMn,
+        uint256 inMx,
+        uint256 outMn,
+        uint256 outMx
+    ) private pure returns (string memory) ;
+  function tokenToColorHex(uint256 token, uint256 offset) internal pure returns (string memory str) ;
+  function getCircleCoord(
+        uint256 tokenAddress,
+        uint256 offset,
+        uint256 tokenId
+    ) internal pure returns (uint256) ;
+  function sliceTokenHex(uint256 token, uint256 offset) internal pure returns (uint256) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/NFTSVG.sol
+
+  function generateSVG(SVGParams memory params) internal pure returns (string memory svg) ;
+  function generateSVGDefs(SVGParams memory params) private pure returns (string memory svg) ;
+  function generateSVGBorderText(
+        string memory quoteToken,
+        string memory baseToken,
+        string memory quoteTokenSymbol,
+        string memory baseTokenSymbol
+    ) private pure returns (string memory svg) ;
+  function generateSVGCardMantle(
+        string memory quoteTokenSymbol,
+        string memory baseTokenSymbol,
+        string memory feeTier
+    ) private pure returns (string memory svg) ;
+  function generageSvgCurve(
+        int24 tickLower,
+        int24 tickUpper,
+        int24 tickSpacing,
+        int8 overRange
+    ) private pure returns (string memory svg) ;
+  function getCurve(
+        int24 tickLower,
+        int24 tickUpper,
+        int24 tickSpacing
+    ) internal pure returns (string memory curve) ;
+  function generateSVGCurveCircle(int8 overRange) internal pure returns (string memory svg) ;
+  function generateSVGPositionDataAndLocationCurve(
+        string memory tokenId,
+        int24 tickLower,
+        int24 tickUpper
+    ) private pure returns (string memory svg) ;
+  function tickToString(int24 tick) private pure returns (string memory) ;
+  function rangeLocation(int24 tickLower, int24 tickUpper) internal pure returns (string memory, string memory) ;
+  function generateSVGRareSparkle(uint256 tokenId, address poolAddress) private pure returns (string memory svg) ;
+  function isRare(uint256 tokenId, address poolAddress) internal pure returns (bool) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/OracleLibrary.sol
+
+  function consult(address pool, uint32 secondsAgo)
+        internal
+        view
+        returns (int24 arithmeticMeanTick, uint128 harmonicMeanLiquidity)
+    ;
+  function getQuoteAtTick(
+        int24 tick,
+        uint128 baseAmount,
+        address baseToken,
+        address quoteToken
+    ) internal pure returns (uint256 quoteAmount) ;
+  function getOldestObservationSecondsAgo(address pool) internal view returns (uint32 secondsAgo) ;
+  function getBlockStartingTickAndLiquidity(address pool) internal view returns (int24, uint128) ;
+  function getWeightedArithmeticMeanTick(WeightedTickData[] memory weightedTickData)
+        internal
+        pure
+        returns (int24 weightedArithmeticMeanTick)
+    ;
+  function getChainedPrice(address[] memory tokens, int24[] memory ticks)
+        internal
+        pure
+        returns (int256 syntheticTick)
+    ;
+
+
+PATH: ../v3-periphery/contracts/libraries/Path.sol
+
+  function hasMultiplePools(bytes memory path) internal pure returns (bool) ;
+  function numPools(bytes memory path) internal pure returns (uint256) ;
+  function decodeFirstPool(bytes memory path)
+        internal
+        pure
+        returns (
+            address tokenA,
+            address tokenB,
+            uint24 fee
+        )
+    ;
+  function getFirstPool(bytes memory path) internal pure returns (bytes memory) ;
+  function skipToken(bytes memory path) internal pure returns (bytes memory) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/PoolAddress.sol
+
+  function getPoolKey(
+        address tokenA,
+        address tokenB,
+        uint24 fee
+    ) internal pure returns (PoolKey memory) ;
+  function computeAddress(address factory, PoolKey memory key) internal pure returns (address pool) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/PoolTicksCounter.sol
+
+  function countInitializedTicksCrossed(
+        IUniswapV3Pool self,
+        int24 tickBefore,
+        int24 tickAfter
+    ) internal view returns (uint32 initializedTicksCrossed) ;
+  function countOneBits(uint256 x) private pure returns (uint16) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/PositionKey.sol
+
+  function compute(
+        address owner,
+        int24 tickLower,
+        int24 tickUpper
+    ) internal pure returns (bytes32) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/PositionValue.sol
+
+  function total(
+        INonfungiblePositionManager positionManager,
+        uint256 tokenId,
+        uint160 sqrtRatioX96
+    ) internal view returns (uint256 amount0, uint256 amount1) ;
+  function principal(
+        INonfungiblePositionManager positionManager,
+        uint256 tokenId,
+        uint160 sqrtRatioX96
+    ) internal view returns (uint256 amount0, uint256 amount1) ;
+  function fees(INonfungiblePositionManager positionManager, uint256 tokenId)
+        internal
+        view
+        returns (uint256 amount0, uint256 amount1)
+    ;
+  function _fees(INonfungiblePositionManager positionManager, FeeParams memory feeParams)
+        private
+        view
+        returns (uint256 amount0, uint256 amount1)
+    ;
+  function _getFeeGrowthInside(
+        IUniswapV3Pool pool,
+        int24 tickLower,
+        int24 tickUpper
+    ) private view returns (uint256 feeGrowthInside0X128, uint256 feeGrowthInside1X128) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/SqrtPriceMathPartial.sol
+
+  function getAmount0Delta(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint128 liquidity,
+        bool roundUp
+    ) internal pure returns (uint256 amount0) ;
+  function getAmount1Delta(
+        uint160 sqrtRatioAX96,
+        uint160 sqrtRatioBX96,
+        uint128 liquidity,
+        bool roundUp
+    ) internal pure returns (uint256 amount1) ;
+
+
+PATH: ../v3-periphery/contracts/libraries/TokenRatioSortOrder.sol
+
+
+
+PATH: ../v3-periphery/contracts/libraries/TransferHelper.sol
+
+  function safeTransferFrom(
+        address token,
+        address from,
+        address to,
+        uint256 value
+    ) internal ;
+  function safeTransfer(
+        address token,
+        address to,
+        uint256 value
+    ) internal ;
+  function safeApprove(
+        address token,
+        address to,
+        uint256 value
+    ) internal ;
+  function safeTransferETH(address to, uint256 value) internal ;
